@@ -1,0 +1,41 @@
+name: Daily Repository Update
+
+on:
+  schedule:
+    # Run at 05:26 UTC (10:56 AM IST)
+    - cron: '26 5 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Simple test step
+        run: echo "Hello World"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Daily update by shahista.kousar@straive.com
+        run: |
+          # Create or update the daily status file
+          echo "Repository updated on $(date)" > status.txt
+          
+          # Add and commit changes
+          git add status.txt
+          git commit -m "Daily automated update $(date)"
+          git push origin HEAD:main
